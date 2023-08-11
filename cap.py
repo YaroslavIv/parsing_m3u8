@@ -30,6 +30,10 @@ class Cap:
                 self.lipetsk()
             case "cam_74":
                 self.cam_74()
+            case "baikal":
+                self.baikal()
+            case _:
+                raise ValueError(f'error cap: {name}')
     
     def yar_net(self) -> None:
         for name in self.cap:
@@ -253,6 +257,34 @@ class Cap:
                 if x.status_code == 200:
                     self.write(x.content, os.path.join(
                         self.name, self.folder_ts, name, url.split('.hls')[0].replace('/', '_')))
+                else:
+                    print(f'error: {url}')
+            print(name)
+
+    def baikal(self) -> None:
+        for list_link in self.cap:
+            name = list_link[0].split('/')[-3]
+            os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
+            mono_url = grequests.map(
+                [grequests.get(list_link[0])])
+
+            if mono_url[0] is None:
+                print(f'ERROR: {name}')
+                continue
+
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(grequests.get(list_link[1].format(url)))
+
+            out = grequests.map(rs)
+            for i, url in enumerate(mono_list):
+                x = out[i]
+                if x.status_code == 200:
+                    self.write(x.content, os.path.join(
+                        self.name, self.folder_ts, name, url.split('.ts')[0].replace('/', '_')))
                 else:
                     print(f'error: {url}')
             print(name)
