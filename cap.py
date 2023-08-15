@@ -34,6 +34,8 @@ class Cap:
                 self.default()
             case "murmansk":
                 self.default()
+            case "transport_nov":
+                self.default(-2)
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -263,9 +265,9 @@ class Cap:
                     print(f'error: {url}')
             print(name)
 
-    def default(self) -> None:
+    def default(self, n=-3) -> None:
         for list_link in self.cap:
-            name = list_link[0].split('/')[-3]
+            name = list_link[0].split('/')[n]
             os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
             mono_url = grequests.map(
                 [grequests.get(list_link[0], verify=False)])
