@@ -31,7 +31,9 @@ class Cap:
             case "cam_74":
                 self.cam_74()
             case "baikal":
-                self.baikal()
+                self.default()
+            case "murmansk":
+                self.default()
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -261,12 +263,12 @@ class Cap:
                     print(f'error: {url}')
             print(name)
 
-    def baikal(self) -> None:
+    def default(self) -> None:
         for list_link in self.cap:
             name = list_link[0].split('/')[-3]
             os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
             mono_url = grequests.map(
-                [grequests.get(list_link[0])])
+                [grequests.get(list_link[0], verify=False)])
 
             if mono_url[0] is None:
                 print(f'ERROR: {name}')
@@ -277,7 +279,7 @@ class Cap:
 
             rs = []
             for url in mono_list:
-                rs.append(grequests.get(list_link[1].format(url)))
+                rs.append(grequests.get(list_link[1].format(url), verify=False))
 
             out = grequests.map(rs)
             for i, url in enumerate(mono_list):
