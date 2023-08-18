@@ -1,12 +1,30 @@
 {
     "name": "transport_nov",
     "correct": [
-        "cam91",
-        "cam92",
-        "cam94",
-        "cam96",
-        "cam97",
-        "cam98"
+        [
+            "https://camera.mxc.ru/hls/cam91/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam91/{}"
+        ],
+        [
+            "https://camera.mxc.ru/hls/cam92/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam92/{}"
+        ],
+        [
+            "https://camera.mxc.ru/hls/cam94/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam94/{}"
+        ],
+        [
+            "https://camera.mxc.ru/hls/cam96/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam96/{}"
+        ],
+        [
+            "https://camera.mxc.ru/hls/cam97/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam97/{}"
+        ],
+        [
+            "https://camera.mxc.ru/hls/cam98/stream.m3u8",
+            "https://camera.mxc.ru/hls/cam98/{}"
+        ]
     ],
     "not_correct": []
 }

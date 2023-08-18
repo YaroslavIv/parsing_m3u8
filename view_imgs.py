@@ -44,6 +44,10 @@ class Manager:
         self.config[self.img_index] = False
         self.next(event)
 
+    def all(self, event) -> None:
+        for i in range(self.max_element+1):
+            self.config[i] = True
+
     def img(self) -> Image:
         cv2_img_bgr = cv2.imread(os.path.join(
             self.src, self.imgs[self.img_index]))
@@ -68,6 +72,7 @@ class Manager:
         self.win.bind('<a>', self.accept)
         self.win.bind('<d>', self.decline)
         self.win.bind('<s>', self.save)
+        self.win.bind('<l>', self.all)
 
     def save(self, event) -> None:
         out_json = {

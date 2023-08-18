@@ -50,13 +50,17 @@ class Logic:
             cv2.imwrite(os.path.join(os.path.join(self.config.name,
                         self.folder_view), f'{folder}.jpg'), frame)
 
-    def view_imgs(self, size: List[int]) -> None:
+    def view_imgs(self, size: List[int], all: bool) -> None:
 
         m = Manager(os.path.join(self.config.name, self.folder_view), os.path.join(
             self.config.name, self.folder_view), self.config.name, size)
         m.bind()
-        m.show()
-        m.start()
+        if all:
+            m.all(None)
+            m.save(None)
+        else:
+            m.show()
+            m.start()
 
     def videos_to_imgs(self) -> None:
         if not os.path.isdir(self.config.name):
@@ -167,10 +171,10 @@ class Logic:
 
         copyfile(src, dst)
     
-    def run(self, size: List[int]) -> None:
+    def run(self, size: List[int], all: bool) -> None:
         self.start()
         self.video_to_img()
-        self.view_imgs(size)
+        self.view_imgs(size, all)
         self.videos_to_imgs()
         self.check_imgs()
         self.copy_check_imgs()

@@ -36,6 +36,8 @@ class Cap:
                 self.default()
             case "transport_nov":
                 self.default(-2)
+            case "pskov":
+                self.default()
             case _:
                 raise ValueError(f'error cap: {name}')
     

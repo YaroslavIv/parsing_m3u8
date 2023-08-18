@@ -18,6 +18,7 @@ def init_arg() -> argparse.Namespace:
                         ])
     parser.add_argument('--size', nargs='+',
                         help='Resize img', default=['544', '320'])
+    parser.add_argument('--all', type=bool, help='skip view_imgs', default=False)
 
     return parser.parse_args()
 
@@ -44,5 +45,5 @@ if __name__ == '__main__':
             logic.new_json()
         case "run":
             size = [int(x) for x in arg.size]
-            logic.run(size)
+            logic.run(size, arg.all)
         
