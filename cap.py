@@ -38,6 +38,8 @@ class Cap:
                 self.default(-2)
             case "pskov":
                 self.default()
+            case "ladamedia":
+                self.default(-2)
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -283,6 +285,7 @@ class Cap:
 
             rs = []
             for url in mono_list:
+                url = url.replace('\r', '') 
                 rs.append(grequests.get(list_link[1].format(url), verify=False))
 
             out = grequests.map(rs)

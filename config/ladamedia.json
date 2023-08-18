@@ -1,0 +1,9 @@
+{
+    "name": "ladamedia",
+    "correct": [
+        [
+            "https://ladamedia.ru/8080/hls/A2KoM83W/G0qgaruU.m3u8",
+            "https://ladamedia.ru/8080/hls/A2KoM83W/{}"
+        ]
+    ]
+}
