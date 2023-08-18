@@ -42,6 +42,8 @@ class Cap:
                 self.default(-2)
             case "gorodcamer":
                 self.default(-2)
+            case "ul":
+                self.default(-2)
             case _:
                 raise ValueError(f'error cap: {name}')
     
