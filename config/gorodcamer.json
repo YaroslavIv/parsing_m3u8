@@ -1,0 +1,37 @@
+{
+    "name": "gorodcamer",
+    "correct": [
+        [
+            "https://restreamer.simdev.ru/ae7c570594b2de12/stream.m3u8",
+            "https://restreamer.simdev.ru/ae7c570594b2de12/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/fef15de60031824e/stream.m3u8",
+            "https://restreamer.simdev.ru/fef15de60031824e/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/93968b7a086f3d0a/stream.m3u8",
+            "https://restreamer.simdev.ru/93968b7a086f3d0a/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/46da0d564163f09a/stream.m3u8",
+            "https://restreamer.simdev.ru/46da0d564163f09a/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/8094de61062d26f5/stream.m3u8",
+            "https://restreamer.simdev.ru/8094de61062d26f5/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/284b7c0c38454d0a/stream.m3u8",
+            "https://restreamer.simdev.ru/284b7c0c38454d0a/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/6bd3e3c450f87571/stream.m3u8",
+            "https://restreamer.simdev.ru/6bd3e3c450f87571/{}"
+        ],
+        [
+            "https://restreamer.simdev.ru/f9548feafb6c86a8/stream.m3u8",
+            "https://restreamer.simdev.ru/f9548feafb6c86a8/{}"
+        ]
+    ]
+}

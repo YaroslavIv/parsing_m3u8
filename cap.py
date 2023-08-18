@@ -40,6 +40,8 @@ class Cap:
                 self.default()
             case "ladamedia":
                 self.default(-2)
+            case "gorodcamer":
+                self.default(-2)
             case _:
                 raise ValueError(f'error cap: {name}')
     
