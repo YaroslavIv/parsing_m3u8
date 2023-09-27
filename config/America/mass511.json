@@ -1,0 +1,24 @@
+{
+    "name": "mass511",
+    "correct": [
+		["1503.stream", "chunklist_w1168156506.m3u8?token=6a813b759f017dc8d4f3cd4ecdd7ad90feb55b894bb1c43c759dabf02307eca8&system=castlerock&startBy=1695719454362&sessionId=vw9wxG9y&quotas=g%3A270"],
+		["1251.stream", "chunklist_w889402528.m3u8?token=649be38843f20826748d80987b9a612c6a0cd4730dd133636d183bb34c099726&system=castlerock&startBy=1695719454397&sessionId=1hcnTrqR&quotas=g%3A270"],
+        ["1142.stream", "chunklist_w1110783106.m3u8?token=9d74cdc8736c0f5c24d392364881e2b824e04132ed939c6114e837d85235600e&system=castlerock&startBy=1695719454365&sessionId=Eo712AZM&quotas=g%3A270"],
+		["435462.stream", "chunklist_w1508402407.m3u8?token=b5c57de6a0f90c897a47957226f4c0cdf115a93dd03f6410c7d3a22679f8793e&system=castlerock&startBy=1695721403250&sessionId=Isk5X6cX&quotas=g%3A270"],
+		["435463.stream", "chunklist_w1798552367.m3u8?token=f934c5133e27e83c486f5fcbdd8b0e143008df826a5623fdfdf494a96ccc341f&system=castlerock&startBy=1695721403256&sessionId=m1cOD73d&quotas=g%3A270"],
+		["1405.stream", "chunklist_w1004558928.m3u8?token=8f9f131fffc5ca57f87bbf13c14a29b2de7efea8513d203a6f7281c3870315c8&system=castlerock&startBy=1695721403285&sessionId=sLtiM2ER&quotas=g%3A270"],
+		["1298.stream", "chunklist_w1753953007.m3u8?token=dfddaee862d3d131f8d91cc59869a96bffcc699b4ae075a501c736d4ea8bde0c&system=castlerock&startBy=1695721573856&sessionId=d9TaqYNr&quotas=g%3A270"],
+		["1494.stream", "chunklist_w1494218589.m3u8?token=afa1ef19f503fec552a4508aeed8b2e92d54153c242f80dc659fc2b9434726de&system=castlerock&startBy=1695721631480&sessionId=v0KEWLnp&quotas=g%3A270"],
+		["1410.stream", "chunklist_w1918216475.m3u8?token=872f97234d91e8874b8a0d77fc9c1bf1f3964963caa415ca17d8ba9076b71534&system=castlerock&startBy=1695721686278&sessionId=3Tx79AeR&quotas=g%3A270"],
+		["1475.stream", "chunklist_w226556516.m3u8?token=46367b4dfedd912d8085eccd1dd86e2e499ea5995ab145d8b2bf1c96b08fc72d&system=castlerock&startBy=1695721751201&sessionId=YFcjfPEy&quotas=g%3A270"], 
+		["1615.stream", "chunklist_w1436269164.m3u8?token=bf8b0df67e88c12d3a228158d130fd67570ce22ee0e3de577a2fd58446912c67&system=castlerock&startBy=1695721820225&sessionId=KTSfU6nf&quotas=g%3A270"],
+		["406557.stream", "chunklist_w1671363941.m3u8?token=f08a8b17da70d4ef1c754c418810c5afd5b1342ce02cfe96d05de96faeb27dfe&system=castlerock&startBy=1695721884851&sessionId=Bztght6z&quotas=g%3A270"],
+		["406597.stream", "chunklist_w1388301238.m3u8?token=eb6d25a67a90e757f47eb2bf6752bf0d13bc7dd37120bb518b6b67b320b47f37&system=castlerock&startBy=1695721884834&sessionId=8aciSYX1&quotas=g%3A270"],
+		["1602.stream", "chunklist_w101321905.m3u8?token=cbb9d94e8f15432f36befc0b027959c38e45501f6ae69dd53679e851f904e900&system=castlerock&startBy=1695721884758&sessionId=ju6JXJ28&quotas=g%3A270"],
+		["1213.stream", "chunklist_w47915139.m3u8?token=d0675bbd5202707e026c7681220ed3b1684d75e1a2121c92d772c1f5b46426e5&system=castlerock&startBy=1695721884951&sessionId=vSfQusfG&quotas=g%3A270"],
+		["1316.stream", "chunklist_w964141265.m3u8?token=245c0fb43827d1797547a0fadf5b1465cf025c1296f05f148840bbee60ddd243&system=castlerock&startBy=1695722032976&sessionId=pyf6M7Sa&quotas=g%3A270"],
+		["1318.stream", "chunklist_w664678755.m3u8?token=022b34ad3df5f1c60fc614a56fb3a77398ee98c3be33e7dcbfa5096c790e0fc7&system=castlerock&startBy=1695722032921&sessionId=T4wj9O6t&quotas=g%3A270"],
+		["432544.stream", "chunklist_w633129313.m3u8?token=a6cfa17e0547800ca005efcbd8671367ae00b50153b7ea89c98ec5d598d9f0c7&system=castlerock&startBy=1695722112800&sessionId=2S4saHl7&quotas=g%3A270"],
+		["432508.stream", "chunklist_w299748204.m3u8?token=6bd96feaa04a6b692b7a98ae24e4bbe7d5f4371e2d2bc0310f7d5b76fb072b5f&system=castlerock&startBy=1695722186966&sessionId=ErljIrJy&quotas=g%3A270"]
+    ]
+}

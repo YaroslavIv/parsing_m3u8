@@ -9,6 +9,7 @@ class Cap:
 
     def write(self, content: bytes, name: str) -> None:
         with open(f"{name}.ts", 'wb') as f:
+            #print(type(content))
             f.write(content)
     
     def switch(self, name) -> None:
@@ -44,6 +45,14 @@ class Cap:
                 self.default(-2)
             case "ul":
                 self.default(-2)
+            case "mass511":
+                self.mass511()
+            case "la511":
+                self.la511()
+            case "canlimobase":
+                self.canlimobase()
+            case "nvroads":
+                self.nvroads()
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -131,6 +140,7 @@ class Cap:
                 return
             out = mono_url[0].text.split('\n')
             mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_list)
 
             rs = []
             for suffix in mono_list:
@@ -245,7 +255,119 @@ class Cap:
                 else:
                     print(f'error: {url}')
             print(name)
-    
+
+    def mass511(self) -> None:
+        for name in self.cap:
+            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0]), exist_ok=True)
+            url = f'https://restream-5.trafficland.com/live/{name[0]}/{name[1]}'
+            print(url)
+            mono_url = grequests.map([grequests.get(url)])
+            if mono_url[0] is None:
+                return
+            out = mono_url[0].text.split('\n')
+            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_url[0].status_code)
+            rs = []
+            for suffix in mono_list:
+                url = f'https://restream-5.trafficland.com/live/{name[0]}/{suffix}'
+                rs.append(grequests.get(url))
+            out = grequests.map(rs)
+
+            for i, suffix in enumerate(mono_list):
+                print(out[i].status_code)
+                if out[i].status_code == 200:
+                    print(os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                    self.write(out[i].content, os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                else:
+                    print(f'error: {suffix}')
+            print(name)
+    def la511(self) -> None:
+
+        for name in self.cap:
+            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0]), exist_ok=True)
+            url = f'https://itsstreamingbr.dotd.la.gov/public/{name[0]}/{name[1]}'
+            mono_url = grequests.map([grequests.get(url)])
+            print(mono_url)
+            if mono_url[0] is None:
+                continue
+            out = mono_url[0].text.split('\n')
+            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_url[0].status_code)
+            rs = []
+            for suffix in mono_list:
+                url = f'https://itsstreamingbr.dotd.la.gov/public/{name[0]}/{suffix}'
+                rs.append(grequests.get(url))
+            out = grequests.map(rs)
+
+            for i, suffix in enumerate(mono_list):
+                print(out[i].status_code)
+                if out[i].status_code == 200:
+                    print(os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                    self.write(out[i].content, os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                else:
+                    print(f'error: {suffix}')
+            print(name)
+    def canlimobase(self) -> None:
+
+        for name in self.cap:
+            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0][:5]), exist_ok=True)
+            url = f'https://5a78c55e99e82.streamlock.net/{name[0]}/{name[1]}'
+            print(url)
+            mono_url = grequests.map([grequests.get(url)])
+            print(mono_url)
+            if mono_url[0] is None:
+                continue
+            out = mono_url[0].text.split('\n')
+            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_url[0].status_code)
+            rs = []
+            for suffix in mono_list:
+                url = f'https://5a78c55e99e82.streamlock.net/{name[0]}/{suffix}'
+                rs.append(grequests.get(url))
+            out = grequests.map(rs)
+
+            for i, suffix in enumerate(mono_list):
+                if out[i].status_code == 200:
+                    print(os.path.join(
+                        self.name, self.folder_ts, name[0][:5], suffix.split('.ts')[0][:10].replace('/', '_')))
+                    self.write(out[i].content, os.path.join(
+                        self.name, self.folder_ts, name[0][:5], suffix.split('.ts')[0][:10].replace('/', '_')))
+                else:
+                    print(f'error: {suffix}')
+            print(name)
+    def nvroads(self) -> None:
+
+        for name in self.cap:
+            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0]), exist_ok=True)
+            url = f'https://stream.oktraffic.org/delay-stream/{name[0]}/{name[1]}'
+            print(url)
+            mono_url = grequests.map([grequests.get(url)])
+            print(mono_url)
+            if mono_url[0] is None:
+                continue
+            out = mono_url[0].text.split('\n')
+            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_url[0].status_code)
+            rs = []
+            for suffix in mono_list:
+                url = f'https://stream.oktraffic.org/delay-stream/{name[0]}/{suffix}'
+                rs.append(grequests.get(url))
+            out = grequests.map(rs)
+
+            for i, suffix in enumerate(mono_list):
+                if out[i].status_code == 200:
+                    print(os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                    self.write(out[i].content, os.path.join(
+                        self.name, self.folder_ts, name[0], suffix.split('.ts')[0].replace('/', '_')))
+                else:
+                    print(f'error: {suffix}')
+            print(name)
+
     def cam_74(self) -> None:
         for name in self.cap:
             os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
