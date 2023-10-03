@@ -53,6 +53,10 @@ class Cap:
                 self.canlimobase()
             case "nvroads":
                 self.nvroads()
+            case "gits_gg":
+                self.gits_gg()
+            case "spatic":
+                self.spatic()
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -311,6 +315,34 @@ class Cap:
                 else:
                     print(f'error: {suffix}')
             print(name)
+    def gits_gg(self) -> None:
+
+        for name in self.cap:
+            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0].replace("/", "_")), exist_ok=True)
+            url = f'https://gitsview.gg.go.kr:8082/{name[0]}/{name[1]}'
+            mono_url = grequests.map([grequests.get(url)])
+            print(mono_url)
+            if mono_url[0] is None:
+                continue
+            out = mono_url[0].text.split('\n')
+            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
+            print(mono_url[0].status_code)
+            rs = []
+            for suffix in mono_list:
+                url = f'https://gitsview.gg.go.kr:8082/{name[0]}/{suffix}'
+                rs.append(grequests.get(url))
+            out = grequests.map(rs)
+
+            for i, suffix in enumerate(mono_list):
+                print(out[i].status_code)
+                if out[i].status_code == 200:
+                    print(os.path.join(
+                        self.name, self.folder_ts, name[0].replace("/", "_"), suffix.split('.ts')[0].replace('/', '_')))
+                    self.write(out[i].content, os.path.join(
+                        self.name, self.folder_ts, name[0].replace("/", "_"), suffix.split('.ts')[0].replace('/', '_')))
+                else:
+                    print(f'error: {suffix}')
+            print(name)
     def canlimobase(self) -> None:
 
         for name in self.cap:
@@ -391,6 +423,43 @@ class Cap:
                 if x.status_code == 200:
                     self.write(x.content, os.path.join(
                         self.name, self.folder_ts, name, url.split('.hls')[0].replace('/', '_')))
+                else:
+                    print(f'error: {url}')
+            print(name)
+    def spatic(self) -> None:
+        for name1 in range(150, 300):
+            name = str(name1)
+            os.makedirs(os.path.join(self.name, self.folder_ts, name+'.stream'), exist_ok=True)
+            mono_url1 = grequests.map(
+                [grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
+            x1 = mono_url1[0].text.split('\n')
+            mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+            if mono_url1[0] is None:
+                print(f'ERROR: {name}')
+                continue
+            try:
+                mono_url = grequests.map(
+                    [grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/{mono_list1[0]}')])
+            except Exception:
+                continue
+
+            if mono_url[0] is None:
+                print(f'ERROR: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/{url}'))
+
+            out = grequests.map(rs)
+            for i, url in enumerate(mono_list):
+                x = out[i]
+                if x.status_code == 200:
+                    print(name + ' excellent')
+                    self.write(x.content, os.path.join(
+                        self.name, self.folder_ts, name+'.stream', url.replace('/', '_').replace('.ts', '')))
                 else:
                     print(f'error: {url}')
             print(name)
