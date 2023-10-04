@@ -318,31 +318,41 @@ class Cap:
     def gits_gg(self) -> None:
 
         for name in self.cap:
-            os.makedirs(os.path.join(self.name.replace(".", ""), self.folder_ts, name[0].replace("/", "_")), exist_ok=True)
-            url = f'https://gitsview.gg.go.kr:8082/{name[0]}/{name[1]}'
-            mono_url = grequests.map([grequests.get(url)])
-            print(mono_url)
-            if mono_url[0] is None:
+            os.makedirs(os.path.join(self.name, self.folder_ts, name[0].replace("/", "_")), exist_ok=True)
+            token = 'playlist.m3u8?wmsAuthSign=c2VydmVyX3RpbWU9MTAvNC8yMDIzIDI6Mzg6NTkgUE0maGFzaF92YWx1ZT1KSFZqTTUwVWwwbjJLcjVaNDNuSklBPT0mdmFsaWRtaW51dGVzPTEyMA==' #token says: "pls update me before up the application("
+            mono_url1 = grequests.map(
+                [grequests.get(f'https://gitsview.gg.go.kr:8082/{name[0]}/{token}')])
+            x1 = mono_url1[0].text.split('\n')
+            mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+            if mono_url1[0] is None:
+                print(f'ERROR: {name}')
                 continue
-            out = mono_url[0].text.split('\n')
-            mono_list = [y for y in out if y[:1] != '#' and len(y) > 0]
-            print(mono_url[0].status_code)
-            rs = []
-            for suffix in mono_list:
-                url = f'https://gitsview.gg.go.kr:8082/{name[0]}/{suffix}'
-                rs.append(grequests.get(url))
-            out = grequests.map(rs)
+            try:
+                mono_url = grequests.map(
+                    [grequests.get(f'https://gitsview.gg.go.kr:8082/{name[0]}/{mono_list1[0]}')])
+            except Exception:
+                continue
 
-            for i, suffix in enumerate(mono_list):
-                print(out[i].status_code)
-                if out[i].status_code == 200:
-                    print(os.path.join(
-                        self.name, self.folder_ts, name[0].replace("/", "_"), suffix.split('.ts')[0].replace('/', '_')))
-                    self.write(out[i].content, os.path.join(
-                        self.name, self.folder_ts, name[0].replace("/", "_"), suffix.split('.ts')[0].replace('/', '_')))
+            if mono_url[0] is None:
+                print(f'ERROR: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(grequests.get(f'https://gitsview.gg.go.kr:8082/{name[0]}/{url}'))
+
+            out = grequests.map(rs)
+            for i, url in enumerate(mono_list):
+                x = out[i]
+                if x.status_code == 200:
+                    st = os.path.join(
+                        self.name, self.folder_ts, name[0].replace("/", "_"), url.replace('/', '_').replace('.ts', '')).find('?')
+                    self.write(x.content, os.path.join(
+                        self.name, self.folder_ts, name[0].replace("/", "_"), url.replace('/', '_').replace('.ts', ''))[:st])
                 else:
-                    print(f'error: {suffix}')
-            print(name)
+                    print(f'error: {url}')
     def canlimobase(self) -> None:
 
         for name in self.cap:
