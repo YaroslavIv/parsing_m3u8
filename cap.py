@@ -34,6 +34,8 @@ class Cap:
                 self.cam_74()
             case "baikal":
                 self.default()
+            case "511wi":
+                self.wi511()
             case "murmansk":
                 self.default()
             case "transport_nov":
@@ -365,6 +367,56 @@ class Cap:
             rs = []
             for url in mono_list:
                 rs.append(grequests.get(f'https://itsstreamingbr2.dotd.la.gov/public/{name}/{url}'))
+
+            out = grequests.map(rs)
+            try:
+                for i, url in enumerate(mono_list):
+                    x = out[i]
+                    if x.status_code == 200:
+                        self.write(x.content, os.path.join(
+                            self.name, self.folder_ts, name.replace("/", "_"), url.replace('/', '_').replace('.ts', '')))
+                    else:
+                        print(f'error: {url}')
+            except Exception:
+                continue
+            print(name)
+            
+    def wi511(self) -> None:
+        for name in self.cap:
+            ccv = 'cctv1'
+            os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
+            mono_url1 = grequests.map(
+                [grequests.get(f'https://{ccv}.dot.wi.gov/rtplive/{name}/playlist.m3u8')])
+            x1 = mono_url1[0].text.split('\n')
+            mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+            if mono_url1[0].status_code==404:
+                try:
+                    ccv = 'cctv2' if ccv=='cctv1' else 'cctv1'
+                    mono_url1 = grequests.map(
+                        [grequests.get(f'https://{ccv}.dot.wi.gov/rtplive/{name}/playlist.m3u8')])
+                    x1 = mono_url1[0].text.split('\n')
+                    mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                    if mono_url1[0].status_code==404:
+                        print(f'ERROR1: https://{ccv}.dot.wi.gov/rtplive/{name}/playlist.m3u8')
+                        continue
+                except Exception:
+                    continue
+            try:
+                mono_url = grequests.map(
+                    [grequests.get(f'https://{ccv}.dot.wi.gov/rtplive/{name}/{mono_list1[0]}')])
+            except Exception as e:
+                print(mono_url1[0])
+                continue
+
+            if mono_url[0] is None:
+                print(f'ERROR2: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(grequests.get(f'https://{ccv}.dot.wi.gov/rtplive/{name}/{url}'))
 
             out = grequests.map(rs)
             try:
