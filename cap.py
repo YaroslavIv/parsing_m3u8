@@ -344,17 +344,32 @@ class Cap:
 
     def la511(self) -> None:
         for name in self.cap:
+            ccv = 'itsstreamingbr2'
             os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
             mono_url1 = grequests.map(
-                [grequests.get(f'https://itsstreamingbr2.dotd.la.gov/public/{name}/playlist.m3u8')])
+                [grequests.get(f'https://{ccv}.dotd.la.gov/public/{name}/playlist.m3u8')])
             x1 = mono_url1[0].text.split('\n')
             mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
             if mono_url1[0] is None:
-                print(f'ERROR1: {name}')
-                continue
+                ccv = 'itsstreamingbr2'
+                os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
+                mono_url1 = grequests.map(
+                    [grequests.get(f'https://{ccv}.dotd.la.gov/public/{name}/playlist.m3u8')])
+                x1 = mono_url1[0].text.split('\n')
+                mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                if mono_url1[0] is None:
+                    ccv = 'itsstreamingno'
+                    os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
+                    mono_url1 = grequests.map(
+                        [grequests.get(f'https://{ccv}.dotd.la.gov/public/{name}/playlist.m3u8')])
+                    x1 = mono_url1[0].text.split('\n')
+                    mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                    if mono_url1[0] is None:
+                        print(f'ERROR1: {name}')
+                        continue
             try:
                 mono_url = grequests.map(
-                    [grequests.get(f'https://itsstreamingbr2.dotd.la.gov/public/{name}/{mono_list1[0]}')])
+                    [grequests.get(f'https://{ccv}.dotd.la.gov/public/{name}/{mono_list1[0]}')])
             except Exception:
                 continue
 
@@ -366,7 +381,7 @@ class Cap:
 
             rs = []
             for url in mono_list:
-                rs.append(grequests.get(f'https://itsstreamingbr2.dotd.la.gov/public/{name}/{url}'))
+                rs.append(grequests.get(f'https://{ccv}.dotd.la.gov/public/{name}/{url}'))
 
             out = grequests.map(rs)
             try:

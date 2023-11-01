@@ -1,6 +1,9 @@
 {
     "name": "canlimobase",
     "correct": [
+		["tkm1/hls/186.stream"],
+		["tkm4/hls/298.stream"],
+		["tkm4/hls/300.stream"],
 		["tkm4/hls/77.stream"],
 		["tkm4/hls/844.stream"],
 		["tkm1/hls/243.stream"],
