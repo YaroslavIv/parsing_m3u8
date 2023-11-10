@@ -12,7 +12,7 @@ def read_config(path: str) -> Config:
     if not os.path.isfile(path):
         raise ValueError(f"not find config: {path}")
  
-    with open(path, 'r', encoding="utf-16") as f:
+    with open(path, 'r') as f:
         config = json.load(f)
     
     return Config(config['correct'], config['name'])

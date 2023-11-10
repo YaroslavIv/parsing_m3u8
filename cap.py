@@ -68,8 +68,14 @@ class Cap:
                 self.livetrafficuk()
             case "autostrate":
                 self.autostrade()
+            case "rijeka":
+                self.rijeka()
             case 'dsat':
                 self.dsat()
+            case 'wv511':
+                self.wv511()
+            case 'naxi':
+                self.naxi()
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -436,6 +442,85 @@ class Cap:
             except Exception:
                 continue
             print(name)
+
+    def naxi(self) -> None:
+        for name in self.cap:
+            #ccv = 'itsstreamingbr2'
+            os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
+            try:
+                mono_url = grequests.map(
+                    [grequests.get(f'https://streamer.devnet.rs/hls/{name}')])
+            except Exception:
+                continue
+
+            if mono_url[0] is None:
+                print(f'ERROR2: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            test = []
+            for url in mono_list:
+                url_type = url[0:url.find('-')]
+                url_num = url[url.find('-')+1:url.find('.')]
+                url_num = str(int(url_num)+10)
+                url_res = str(url_type) + str(url_num)+'.ts'
+                print(url, url_res)
+                test.append(f'https://streamer.devnet.rs/hls/{url_res}')
+                rs.append(grequests.get(f'https://streamer.devnet.rs/hls/{url}'))
+
+            out = grequests.map(rs)
+            try:
+                for i, url in enumerate(mono_list):
+                    x = out[i]
+                    if x.status_code == 200:
+                        self.write(x.content, os.path.join(
+                            self.name, self.folder_ts, name.replace("/", "_"), url.replace('/', '_').replace('.ts', '')))
+                    else:
+                        print(f'error: {url}, {x.status_code}, {test[i]}')
+            except Exception:
+                continue
+            print(name)
+
+    def rijeka(self) -> None:
+        for name in self.cap:
+            #ccv = 'itsstreamingbr2'
+            os.makedirs(os.path.join(self.name, self.folder_ts, name.replace("/", "_")), exist_ok=True)
+            mono_url1 = [requests.get(f'https://wowza.3tcable.hr/{name}/playlist.m3u8', verify=False)]
+            if mono_url1[0] is None:
+                print(mono_url1)
+                print(f'ERROR1: https://wowza.3tcable.hr/{name}/playlist.m3u8')
+                continue
+            x1 = mono_url1[0].text.split('\n')
+            mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+            try:
+                mono_url = [requests.get(f'https://wowza.3tcable.hr/{name}/{mono_list1[0]}', verify=False)]
+            except Exception:
+                continue
+
+            if mono_url[0] is None:
+                print(f'ERROR2: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(requests.get(f'https://wowza.3tcable.hr/{name}/{url}', verify=False))
+
+            out = rs
+            try:
+                for i, url in enumerate(mono_list):
+                    x = out[i]
+                    if x.status_code == 200:
+                        self.write(x.content, os.path.join(
+                            self.name, self.folder_ts, name.replace("/", "_"), url.replace('/', '_').replace('.ts', '')))
+                    else:
+                        print(f'error: {url}')
+            except Exception:
+                continue
+            print(name)
             
     def wi511(self) -> None:
         for name in self.cap:
@@ -652,19 +737,38 @@ class Cap:
                     print(f'error: {url}')
             print(name)
     def spatic(self) -> None:
-        for name1 in range(130, 260):
+        for name1 in range(3, 1000):
+            ccv = 'strm1'
             name = str(name1)
             os.makedirs(os.path.join(self.name, self.folder_ts, name+'.stream'), exist_ok=True)
             mono_url1 = grequests.map(
-                [grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
+                [grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
             x1 = mono_url1[0].text.split('\n')
             mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
             if mono_url1[0] is None:
-                print(f'ERROR: {name}')
-                continue
+                ccv = 'strm2'
+                mono_url1 = grequests.map(
+                [grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
+                x1 = mono_url1[0].text.split('\n')
+                mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                if mono_url1[0] is None:
+                    ccv = 'strm3'
+                    mono_url1 = grequests.map(
+                    [grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
+                    x1 = mono_url1[0].text.split('\n')
+                    mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                    if mono_url1[0] is None:
+                        ccv = 'strm4'
+                        mono_url1 = grequests.map(
+                        [grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/playlist.m3u8')])
+                        x1 = mono_url1[0].text.split('\n')
+                        mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+                        if mono_url1[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
             try:
                 mono_url = grequests.map(
-                    [grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/{mono_list1[0]}')])
+                    [grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/{mono_list1[0]}')])
             except Exception:
                 print('false: ' + name)
                 continue
@@ -677,7 +781,46 @@ class Cap:
 
             rs = []
             for url in mono_list:
-                rs.append(grequests.get(f'https://strm2.spatic.go.kr/live/{name}.stream/{url}'))
+                rs.append(grequests.get(f'https://{ccv}.spatic.go.kr/live/{name}.stream/{url}'))
+
+            out = grequests.map(rs)
+            for i, url in enumerate(mono_list):
+                x = out[i]
+                if x.status_code == 200:
+                    print(name + ' excellent')
+                    self.write(x.content, os.path.join(
+                        self.name, self.folder_ts, name+'.stream', url.replace('/', '_').replace('.ts', '')))
+                else:
+                    print(f'error: {url}')
+            print(name)
+    def wv511(self) -> None:
+        for name1 in range(1, 120):
+            ccv = 'strm1'
+            name = str(name1).zfill(3)
+            os.makedirs(os.path.join(self.name, self.folder_ts, name+'.stream'), exist_ok=True)
+            mono_url1 = grequests.map(
+                [grequests.get(f'https://sfs1.roadsummary.com/rtplive/CAM{name}/playlist.m3u8')])
+            x1 = mono_url1[0].text.split('\n')
+            mono_list1 = [y for y in x1 if y[:1] != '#' and len(y) > 0]
+            if mono_url1[0].status_code!=200:
+                print(f'ERROR: {name}')
+                continue
+            try:
+                mono_url = grequests.map(
+                    [grequests.get(f'https://sfs1.roadsummary.com/rtplive/CAM{name}/{mono_list1[0]}')])
+            except Exception:
+                print('false: ' + name)
+                continue
+
+            if mono_url[0] is None:
+                print(f'ERROR: {name}')
+                continue
+            x = mono_url[0].text.split('\n')
+            mono_list = [y for y in x if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in mono_list:
+                rs.append(grequests.get(f'https://sfs1.roadsummary.com/rtplive/CAM{name}/{url}'))
 
             out = grequests.map(rs)
             for i, url in enumerate(mono_list):

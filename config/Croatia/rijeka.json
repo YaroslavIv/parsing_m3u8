@@ -1,0 +1,20 @@
+{
+    "name": "rijeka",
+    "correct": [
+        "RiProm_Kresimir_Tesla/RiProm_Kresimir_Tesla.stream",
+		"RiProm_Guver/RiProm_Guver.stream",
+		"RiProm_Delta/RiProm_Delta.stream",
+		"RiProm_Osjecka_Tizian/RiProm_Osjecka_Tizian.stream",
+		"RiProm_Diracje/RiProm_Diracje.stream",
+		"RiProm_Kantrida/RiProm_Kantrida.stream",
+		"RiProm_Brajdica/RiProm_Brajdica.stream",
+		"RiProm_Palazzo/RiProm_Palazzo.stream",
+		"RiProm_Zajca/RiProm_Zajca.stream",
+		"RiProm_Strossmayer/RiProm_Strossmayer.stream",
+		"RiProm_Fiumara_Fasizma/RiProm_Fiumara_Fasizma.stream",
+		"RiProm_Osjecka_Obilaz/RiProm_Osjecka_Obilaz.stream",
+		"RiProm_Brajda/RiProm_Brajda.stream",
+		"RiProm_Krnjevo/RiProm_Krnjevo.stream",
+		"RiProm_JadranskiTrg/RiProm_JadranskiTrg.stream"
+    ]
+}
