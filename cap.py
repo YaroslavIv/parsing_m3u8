@@ -9,7 +9,9 @@ class Cap:
         self.folder_ts = folder_ts
 
     def write(self, content: bytes, name: str, extension: str = '.ts') -> None:
-        with open(f"{name}.{extension}", 'wb') as f:
+        name_file = f"{name}.{extension}" 
+        name_file = name_file.replace('?', '')
+        with open(name_file, 'wb') as f:
             #print(type(content))
             f.write(content)
     
