@@ -14,7 +14,8 @@ def init_arg() -> argparse.Namespace:
                             'check_imgs',
                             'copy_check_imgs',
                             'view_imgs',
-                            "run"
+                            "run",
+                            "stream"
                         ])
     parser.add_argument('--size', nargs='+',
                         help='Resize img', default=['544', '320'])
@@ -46,4 +47,5 @@ if __name__ == '__main__':
         case "run":
             size = [int(x) for x in arg.size]
             logic.run(size, arg.all)
-        
+        case "stream":
+            logic.stream()

@@ -26,6 +26,9 @@ class Logic:
 
     def start(self) -> None:
         self.cap.switch(self.config.name)
+    
+    def stream(self) -> None:
+        self.cap.switch(self.config.name, True)
 
     def video_to_img(self) -> None:
         folders = os.listdir(os.path.join(self.config.name, self.folder_ts))

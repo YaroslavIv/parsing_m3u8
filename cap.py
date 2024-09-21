@@ -15,7 +15,7 @@ class Cap:
             #print(type(content))
             f.write(content)
     
-    def switch(self, name) -> None:
+    def switch(self, name: str, stream: bool = False) -> None:
         self.name = name
         match name:
             case "yar_net":
@@ -79,7 +79,7 @@ class Cap:
             case 'naxi':
                 self.naxi()
             case 'sunguide':
-                self.sunguide()
+                self.sunguide(stream)
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -873,61 +873,139 @@ class Cap:
                     print(f'error: {url}')
             print(name)
     
-    def sunguide(self) -> None:
-        for list_link in self.cap:
-            if len(list_link) != 2:
-                continue
+    def sunguide(self, stream: bool = False) -> None:
+        if stream:
+            history = {}
+            urls = {}
+            for list_link in self.cap:
+                if len(list_link) != 2:
+                    continue
 
-            name = list_link[0].split('cameraId=')[-1]
-            os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
-            token = grequests.map(
-                        [grequests.get(list_link[0], verify=False)])
-            if token[0] is None:
-                        print(f'ERROR: {name}')
-                        continue
+                name = list_link[0].split('cameraId=')[-1]
+                os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
+                token = grequests.map(
+                            [grequests.get(list_link[0], verify=False)])
+                if token[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                
+                token = token[0].json()
+
+                chunklist_url = grequests.map(
+                            [grequests.post('https://divas.cloud/VDS-API/SecureTokenUri/GetSecureTokenUriBySourceId', json=token, verify=False)])
+                if chunklist_url[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                
+
+                chunklist_url = chunklist_url[0].text[1:-1]
+                chunklist = grequests.map(
+                            [grequests.get(list_link[1].format(f'playlist.m3u8{chunklist_url}'), verify=False)])
+                if chunklist[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                chunklist = chunklist[0].text.split('\n')
+                chunklist = [y for y in chunklist if y[:1] != '#' and len(y) > 0]
+                if len(chunklist) > 1:
+                            print(f'ERROR: {name}')
+                            continue
+                
+                urls[name] = (list_link[1], chunklist[0])
+                history[name] = set()
             
-            token = token[0].json()
+            while len(history[name]) < 300:
+                rs = []
+                download_url = []
+                media_url_list_g = []
+                for name in urls:
+                    media_url_list_g.append(grequests.get(urls[name][0].format(urls[name][1]), verify=False))
+                    # media_url = grequests.map(
+                    #             [grequests.get(urls[name][0].format(urls[name][1]), verify=False)])
+                    # if media_url[0] is None:
+                    #             print(f'ERROR: {name}')
+                    #             continue
+                    # media_url = media_url[0].text.split('\n')
+                    # media_url_list = [y for y in media_url if y[:1] != '#' and len(y) > 0]
+                media_url_list_g = grequests.map(media_url_list_g)
+                for i, name in enumerate(urls):
+                    media_url = media_url_list_g[i]
+                    if media_url is None:
+                                print(f'ERROR: {name}')
+                                continue
+                    media_url = media_url.text.split('\n')
+                    media_url_list = [y for y in media_url if y[:1] != '#' and len(y) > 0]
+                    for url in media_url_list:
+                        id = int(url.split('_')[-1].split('.')[0])
+                        if not id in history[name]:
+                            history[name].add(id)
+                            url = url.replace('\r', '')
+                            download_url.append(f'{name}_{id}')
+                            rs.append(grequests.get(urls[name][0].format(url), verify=False))
+                
+                out = grequests.map(rs)
+                for i, url in enumerate(download_url):
+                    x = out[i]
+                    if x.status_code == 200:
+                        self.write(x.content, os.path.join(
+                            self.name, self.folder_ts, url.split('_')[0], f'{url.split("_")[1]}'))
+                    else:
+                        print(f'error: {url}')
+                    print(url.split('_')[0])
+        else:
+            for list_link in self.cap:
+                if len(list_link) != 2:
+                    continue
 
-            chunklist_url = grequests.map(
-                        [grequests.post('https://divas.cloud/VDS-API/SecureTokenUri/GetSecureTokenUriBySourceId', json=token, verify=False)])
-            if chunklist_url[0] is None:
-                        print(f'ERROR: {name}')
-                        continue
-            
+                name = list_link[0].split('cameraId=')[-1]
+                os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
+                token = grequests.map(
+                            [grequests.get(list_link[0], verify=False)])
+                if token[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                
+                token = token[0].json()
 
-            chunklist_url = chunklist_url[0].text[1:-1]
+                chunklist_url = grequests.map(
+                            [grequests.post('https://divas.cloud/VDS-API/SecureTokenUri/GetSecureTokenUriBySourceId', json=token, verify=False)])
+                if chunklist_url[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                
 
-            chunklist = grequests.map(
-                        [grequests.get(list_link[1].format(f'playlist.m3u8{chunklist_url}'), verify=False)])
-            if chunklist[0] is None:
-                        print(f'ERROR: {name}')
-                        continue
-            chunklist = chunklist[0].text.split('\n')
-            chunklist = [y for y in chunklist if y[:1] != '#' and len(y) > 0]
-            if len(chunklist) > 1:
-                        print(f'ERROR: {name}')
-                        continue
-            chunklist = chunklist[0]
+                chunklist_url = chunklist_url[0].text[1:-1]
 
-            media_url = grequests.map(
-                        [grequests.get(list_link[1].format(chunklist), verify=False)])
-            if media_url[0] is None:
-                        print(f'ERROR: {name}')
-                        continue
-            media_url = media_url[0].text.split('\n')
-            media_url_list = [y for y in media_url if y[:1] != '#' and len(y) > 0]
+                chunklist = grequests.map(
+                            [grequests.get(list_link[1].format(f'playlist.m3u8{chunklist_url}'), verify=False)])
+                if chunklist[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                chunklist = chunklist[0].text.split('\n')
+                chunklist = [y for y in chunklist if y[:1] != '#' and len(y) > 0]
+                if len(chunklist) > 1:
+                            print(f'ERROR: {name}')
+                            continue
+                chunklist = chunklist[0]
 
-            rs = []
-            for url in media_url_list:
-                url = url.replace('\r', '') 
-                rs.append(grequests.get(list_link[1].format(url), verify=False))
-            
-            out = grequests.map(rs)
-            for i, url in enumerate(media_url_list):
-                x = out[i]
-                if x.status_code == 200:
-                    self.write(x.content, os.path.join(
-                        self.name, self.folder_ts, name, url.split('.ts')[0].replace('/', '_')))
-                else:
-                    print(f'error: {url}')
-            print(name)
+                media_url = grequests.map(
+                            [grequests.get(list_link[1].format(chunklist), verify=False)])
+                if media_url[0] is None:
+                            print(f'ERROR: {name}')
+                            continue
+                media_url = media_url[0].text.split('\n')
+                media_url_list = [y for y in media_url if y[:1] != '#' and len(y) > 0]
+
+                rs = []
+                for url in media_url_list:
+                    url = url.replace('\r', '') 
+                    rs.append(grequests.get(list_link[1].format(url), verify=False))
+                
+                out = grequests.map(rs)
+                for i, url in enumerate(media_url_list):
+                    x = out[i]
+                    if x.status_code == 200:
+                        self.write(x.content, os.path.join(
+                            self.name, self.folder_ts, name, url.split('.ts')[0].replace('/', '_')))
+                    else:
+                        print(f'error: {url}')
+                print(name)
