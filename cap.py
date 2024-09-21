@@ -78,6 +78,8 @@ class Cap:
                 self.wv511()
             case 'naxi':
                 self.naxi()
+            case 'sunguide':
+                self.sunguide()
             case _:
                 raise ValueError(f'error cap: {name}')
     
@@ -308,6 +310,7 @@ class Cap:
                 else:
                     print(f'error: {suffix}')
             print(name)
+
     def gits_gg(self) -> None:
         token = 'playlist.m3u8?wmsAuthSign=c2VydmVyX3RpbWU9MTAvNS8yMDIzIDExOjU4OjE2IEFNJmhhc2hfdmFsdWU9d2pmbzNxelA5TzJlWVI4SFpKUW1Pdz09JnZhbGlkbWludXRlcz0xMjA=' #token says: "pls update me before up the application("
         for name in self.cap:
@@ -405,6 +408,7 @@ class Cap:
             except Exception:
                 continue
             print(name)
+
     def ny511(self) -> None:
         for name in self.cap:
             #ccv = 'itsstreamingbr2'
@@ -573,6 +577,7 @@ class Cap:
             except Exception:
                 continue
             print(name)
+
     def canlimobase(self) -> None:
 
         for name in self.cap:
@@ -600,6 +605,7 @@ class Cap:
                 else:
                     print(f'error: {suffix}')
             print(name)
+
     def autostrade(self) -> None:
 
         for name in self.cap:
@@ -660,6 +666,7 @@ class Cap:
             else:
                 print(f'error: {suffix}')
             print(name)
+
     def nvroads(self) -> None:
 
         for name in self.cap:
@@ -738,6 +745,7 @@ class Cap:
                 else:
                     print(f'error: {url}')
             print(name)
+
     def spatic(self) -> None:
         for name1 in range(3, 1000):
             ccv = 'strm1'
@@ -795,6 +803,7 @@ class Cap:
                 else:
                     print(f'error: {url}')
             print(name)
+
     def wv511(self) -> None:
         for name1 in range(1, 120):
             ccv = 'strm1'
@@ -856,6 +865,65 @@ class Cap:
 
             out = grequests.map(rs)
             for i, url in enumerate(mono_list):
+                x = out[i]
+                if x.status_code == 200:
+                    self.write(x.content, os.path.join(
+                        self.name, self.folder_ts, name, url.split('.ts')[0].replace('/', '_')))
+                else:
+                    print(f'error: {url}')
+            print(name)
+    
+    def sunguide(self) -> None:
+        for list_link in self.cap:
+            if len(list_link) != 2:
+                continue
+
+            name = list_link[0].split('cameraId=')[-1]
+            os.makedirs(os.path.join(self.name, self.folder_ts, name), exist_ok=True)
+            token = grequests.map(
+                        [grequests.get(list_link[0], verify=False)])
+            if token[0] is None:
+                        print(f'ERROR: {name}')
+                        continue
+            
+            token = token[0].json()
+
+            chunklist_url = grequests.map(
+                        [grequests.post('https://divas.cloud/VDS-API/SecureTokenUri/GetSecureTokenUriBySourceId', json=token, verify=False)])
+            if chunklist_url[0] is None:
+                        print(f'ERROR: {name}')
+                        continue
+            
+
+            chunklist_url = chunklist_url[0].text[1:-1]
+
+            chunklist = grequests.map(
+                        [grequests.get(list_link[1].format(f'playlist.m3u8{chunklist_url}'), verify=False)])
+            if chunklist[0] is None:
+                        print(f'ERROR: {name}')
+                        continue
+            chunklist = chunklist[0].text.split('\n')
+            chunklist = [y for y in chunklist if y[:1] != '#' and len(y) > 0]
+            if len(chunklist) > 1:
+                        print(f'ERROR: {name}')
+                        continue
+            chunklist = chunklist[0]
+
+            media_url = grequests.map(
+                        [grequests.get(list_link[1].format(chunklist), verify=False)])
+            if media_url[0] is None:
+                        print(f'ERROR: {name}')
+                        continue
+            media_url = media_url[0].text.split('\n')
+            media_url_list = [y for y in media_url if y[:1] != '#' and len(y) > 0]
+
+            rs = []
+            for url in media_url_list:
+                url = url.replace('\r', '') 
+                rs.append(grequests.get(list_link[1].format(url), verify=False))
+            
+            out = grequests.map(rs)
+            for i, url in enumerate(media_url_list):
                 x = out[i]
                 if x.status_code == 200:
                     self.write(x.content, os.path.join(
